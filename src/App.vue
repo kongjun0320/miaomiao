@@ -1,29 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <Hh></Hh>
+    <keep-alive>
+      <router-view class="box"></router-view>
+    </keep-alive>
+    <Ff></Ff>
   </div>
 </template>
-
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+import Hh from "./components/Hh";
+import Ff from "./components/Ff";
+export default {
+  name: "app",
+  components: {
+    Hh,
+    Ff
   }
+};
+</script>
+
+<style>
+.router-link-active {
+  color: #f03d37;
+}
+.box {
+  padding-bottom: 52px;
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Hh></Hh>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view class="box"></router-view>
+    </keep-alive>
     <Ff></Ff>
   </div>
 </template>
@@ -20,5 +22,8 @@ export default {
 <style>
 .router-link-active {
   color: #f03d37;
+}
+.box {
+  padding-bottom: 52px;
 }
 </style>

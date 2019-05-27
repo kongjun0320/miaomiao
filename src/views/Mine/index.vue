@@ -1,8 +1,16 @@
 <template>
-  <div>hello mine</div>
+  <div>
+    <Login></Login>
+  </div>
 </template>
 <script>
-export default {};
+import Login from "../../components/Login";
+export default {
+  name: "mine",
+  components: {
+    Login
+  }
+};
 </script>
 <style scoped>
 </style>

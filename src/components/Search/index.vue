@@ -4,38 +4,24 @@
       <div class="search_input">
         <div class="search_input_wrapper">
           <i class="iconfont icon-sousuo"></i>
-          <input type="text">
+          <input type="text" v-model="keyword">
         </div>
       </div>
       <div class="search_result">
         <h3>电影/电视剧/综艺</h3>
         <ul>
-          <li>
+          <li v-for="(item, index) in movieList" :key="index">
             <div class="img">
-              <img src="/images/movie_1.jpg">
+              <img :src="item.img|setImgWH('128.180')">
             </div>
             <div class="info">
               <p>
-                <span>无名之辈</span>
-                <span>8.5</span>
+                <span>{{ item.nm }}</span>
+                <span>{{ item.sc }}</span>
               </p>
-              <p>A Cool Fish</p>
-              <p>剧情,喜剧,犯罪</p>
-              <p>2018-11-16</p>
-            </div>
-          </li>
-          <li>
-            <div class="img">
-              <img src="/images/movie_1.jpg">
-            </div>
-            <div class="info">
-              <p>
-                <span>无名之辈</span>
-                <span>8.5</span>
-              </p>
-              <p>A Cool Fish</p>
-              <p>剧情,喜剧,犯罪</p>
-              <p>2018-11-16</p>
+              <p>{{ item.enm }}</p>
+              <p>{{ item.cat }}</p>
+              <p>{{ item.rt }}</p>
             </div>
           </li>
         </ul>
@@ -44,7 +30,43 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  name: "search",
+  data() {
+    return {
+      movieList: [],
+      keyword: "",
+      source: null
+    };
+  },
+  methods: {
+    cancelQuest() {
+      if (typeof this.source === "function") {
+        this.source("终止请求"); //取消请求
+      }
+    }
+  },
+  watch: {
+    async keyword(val) {
+      this.cancelQuest();
+
+      let result = await this.$axios.get(
+        `/api/searchList?cityId=10&kw=${val}`,
+        {
+          cancelToken: new this.$axios.CancelToken(c => {
+            this.source = c;
+          })
+        }
+      );
+
+      if (result.data.data.movies) {
+        this.movieList = result.data.data.movies.list;
+      } else {
+        this.movieList = [];
+      }
+    }
+  }
+};
 </script>
 <style scoped>
 #content .search_body {

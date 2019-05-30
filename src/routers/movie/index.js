@@ -21,6 +21,15 @@ export default {
     {
       path: "city",
       component: () => import("../../components/City")
+    },
+    {
+      path: "detail/:id",
+      components: {
+        detail: () => import("@/views/Movie/Detail")
+      },
+      props: {
+        detail: true
+      }
     }
   ]
 };

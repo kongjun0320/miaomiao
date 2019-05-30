@@ -18,6 +18,7 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <router-view name="detail"></router-view>
   </div>
 </template>
 <script>

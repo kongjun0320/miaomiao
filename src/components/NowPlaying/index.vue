@@ -4,7 +4,7 @@
     <ul v-else>
       <li v-for="(item, index) in movieList" :key="index">
         <div class="pic_show">
-          <img :src="item.img|setImgWH('120.180')">
+          <img :src="item.img|setImgWH('120.180')" @tap="toDetail(item.id)">
         </div>
         <div class="info_list">
           <h2>{{ item.nm }}</h2>
@@ -44,8 +44,13 @@ export default {
       this.movieList = result.data.data.movieList;
       //当组件数据渲染完毕才执行回调
       this.$nextTick(() => {
-        new BScroll(this.$refs.movie_body, {});
+        new BScroll(this.$refs.movie_body, { click: true, tap: true });
       });
+    }
+  },
+  methods: {
+    toDetail(id) {
+      this.$router.push("/movie/detail/" + id);
     }
   }
 };

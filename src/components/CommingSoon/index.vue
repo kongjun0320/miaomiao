@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="movie_body">
+  <div class="movie_body">
+    <BScroll>
       <ul>
         <li v-for="(item, index) in movieList" :key="index">
           <div class="pic_show">
@@ -17,7 +17,7 @@
           <div class="btn_pre">预售</div>
         </li>
       </ul>
-    </div>
+    </BScroll>
   </div>
 </template>
 <script>
@@ -35,9 +35,10 @@ export default {
 };
 </script>
 <style scoped>
-#content .movie_body {
+.movie_body {
   flex: 1;
   overflow: auto;
+  height: 100%;
 }
 .movie_body ul {
   margin: 0 12px;

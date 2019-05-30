@@ -20,10 +20,16 @@ export default {
 </script>
 
 <style>
+#app {
+  height: 100%;
+}
 .router-link-active {
   color: #f03d37;
 }
 .box {
-  padding-bottom: 52px;
+  padding-bottom: 100px;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 </style>

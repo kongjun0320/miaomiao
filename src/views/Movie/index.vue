@@ -3,7 +3,7 @@
     <div id="content">
       <div class="movie_menu">
         <router-link tag="div" to="/movie/city" class="city_name">
-          <span>大连</span>
+          <span>{{ $store.state.city.nm }}</span>
           <i class="iconfont icon-lower-triangle"></i>
         </router-link>
         <div class="hot_swtich">
@@ -21,8 +21,29 @@
   </div>
 </template>
 <script>
+import { messageBox } from "@/components/js";
 export default {
-  name: "movie"
+  name: "movie",
+  components: {},
+  async mounted() {
+    let result = await this.$axios.get("/api/getLocation");
+    let data = result.data;
+    if (data.msg == "ok") {
+      if (this.$store.state.city.id != data.data.id) {
+        messageBox({
+          title: "定位",
+          content: data.data.nm,
+          cancel: "取消",
+          ok: "切换",
+          handleOk() {
+            localStorage.setItem("nowNm", data.data.nm);
+            localStorage.setItem("nowId", data.data.id);
+            location.reload();
+          }
+        });
+      }
+    }
+  }
 };
 </script>
 <style scoped>

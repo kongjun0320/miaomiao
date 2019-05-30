@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div id="content">
+  <div id="content">
+    <div>
       <div class="cinema_menu">
         <div class="city_switch">
           全城
@@ -16,24 +16,27 @@
         </div>
       </div>
     </div>
-    <div class="cinema_body">
-      <ul>
-        <li v-for="(item, index) in cinemas" :key="index">
-          <div>
-            <span>{{ item.nm }}</span>
-            <span class="q">
-              <span class="price">{{ item.sellPrice }}</span> 元起
-            </span>
-          </div>
-          <div class="address">
-            <span>{{ item.addr }}</span>
-            <span>{{ item.distance }}</span>
-          </div>
-          <div class="card">
-            <div v-for="(i, index) in item.tag" v-if="i===1" :key="index">{{ i }}</div>
-          </div>
-        </li>
-      </ul>
+    <Loading v-if="isShowLoading"></Loading>
+    <div v-else class="cinema_body">
+      <BScroll>
+        <ul>
+          <li v-for="(item, index) in cinemas" :key="index">
+            <div>
+              <span>{{ item.nm }}</span>
+              <span class="q">
+                <span class="price">{{ item.sellPrice }}</span> 元起
+              </span>
+            </div>
+            <div class="address">
+              <span>{{ item.addr }}</span>
+              <span>{{ item.distance }}</span>
+            </div>
+            <div class="card">
+              <div v-for="(i, index) in item.tag" v-if="i===1" :key="index">{{ i }}</div>
+            </div>
+          </li>
+        </ul>
+      </BScroll>
     </div>
   </div>
 </template>
@@ -42,12 +45,15 @@ export default {
   name: "sinema",
   data() {
     return {
-      cinemas: []
+      cinemas: [],
+      isShowLoading: true
     };
   },
-  async mounted() {
-    let result = await this.$axios.get("/api/cinemaList?cityId=10");
+  async activated(){
+    let cityId = this.$store.state.city.id;
+    let result = await this.$axios.get("/api/cinemaList?cityId=" + cityId);
     if (result.data.data.cinemas) {
+      this.isShowLoading = false;
       this.cinemas = result.data.data.cinemas;
     }
   }
@@ -69,6 +75,7 @@ export default {
 #content .cinema_body {
   flex: 1;
   overflow: auto;
+  height: 100%;
 }
 .cinema_body ul {
   padding: 20px;

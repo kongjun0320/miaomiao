@@ -48,10 +48,11 @@ export default {
   },
   watch: {
     async keyword(val) {
+      let cityId = this.$store.state.city.id
       this.cancelQuest();
 
       let result = await this.$axios.get(
-        `/api/searchList?cityId=10&kw=${val}`,
+        `/api/searchList?cityId=${cityId}&kw=${val}`,
         {
           cancelToken: new this.$axios.CancelToken(c => {
             this.source = c;

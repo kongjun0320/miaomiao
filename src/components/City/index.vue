@@ -1,20 +1,33 @@
-<template>
+<template >
   <div class="city_body">
     <div class="city_list">
-      <div class="city_hot">
-        <h2>热门城市</h2>
-        <ul class="clearfix">
-          <li v-for="(item, index) in hotList" :key="index">{{ item.nm }}</li>
-        </ul>
-      </div>
-      <div class="city_sort" ref="city_detail">
-        <div v-for="(item, index) in cityList" :key="index">
-          <h2>{{ item.index }}</h2>
-          <ul>
-            <li v-for="(city, index) in item.list" :key="index">{{ city.nm }}</li>
-          </ul>
+      <BScroll ref="city_list">
+        <div>
+          <div class="city_hot">
+            <h2>热门城市</h2>
+            <ul class="clearfix">
+              <li
+                @click="editCity(item.nm,item.id)"
+                v-for="(item, index) in hotList"
+                :key="index"
+              >{{ item.nm }}</li>
+            </ul>
+          </div>
+          <Loading v-if="isShowLoading"></Loading>
+          <div v-else class="city_sort" ref="city_detail">
+            <div v-for="(item, index) in cityList" :key="index">
+              <h2>{{ item.index }}</h2>
+              <ul>
+                <li
+                  @tap="editCity(city.nm,city.id)"
+                  v-for="(city, index) in item.list"
+                  :key="index"
+                >{{ city.nm }}</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+      </BScroll>
     </div>
     <div class="city_index">
       <ul>
@@ -33,14 +46,22 @@ export default {
   data() {
     return {
       cityList: [],
-      hotList: []
+      hotList: [],
+      isShowLoading: true
     };
   },
   methods: {
+    editCity(nm, id) {
+      this.$store.commit("city/CITY_INFO", { nm, id });
+      localStorage.setItem('nowNm',nm)
+      localStorage.setItem('nowId',id)
+      this.$router.push('/movie/nowplaying')
+    },
     async fetch() {
       let result = await this.$axios.get("/api/cityList");
 
       if (result.data.msg === "ok") {
+        this.isShowLoading = false;
         let cityData = result.data.data.cities;
         let { hotList, cityList } = this.formatCityList(cityData);
         this.cityList = cityList;
@@ -93,8 +114,9 @@ export default {
     },
     toCityDetail(index) {
       var h2List = this.$refs.city_detail.getElementsByTagName("h2");
-      this.$refs.city_detail.parentNode.scrollTop =
-        h2List[index].offsetTop - 50;
+      // this.$refs.city_detail.parentNode.scrollTop =
+      //   h2List[index].offsetTop - 50;
+      this.$refs.city_list.toScrollTop(-h2List[index].offsetTop);
     }
   },
   mounted() {
@@ -104,7 +126,7 @@ export default {
 </script>
 <style scoped>
 .city_body {
-  margin-top: 51px;
+  margin-top: 45px;
   display: flex;
   width: 100%;
   position: absolute;
@@ -115,13 +137,14 @@ export default {
   flex: 1;
   overflow: auto;
   background: #fff5f0;
+  margin-top: 10px;
 }
 .city_body .city_list::-webkit-scrollbar {
   background-color: transparent;
   width: 0;
 }
 .city_body .city_hot {
-  margin-top: 20px;
+  margin-top: 55px;
 }
 .city_body .city_hot h2 {
   padding-left: 15px;

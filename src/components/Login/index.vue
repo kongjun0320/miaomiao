@@ -3,13 +3,13 @@
     <div id="content">
       <div class="login_body">
         <div>
-          <input class="login_text" type="text" placeholder="账户名/手机号/Email">
+          <input class="login_text" type="text" placeholder="账户名/手机号/Email" v-model="username">
         </div>
         <div>
-          <input class="login_text" type="password" placeholder="请输入您的密码">
+          <input class="login_text" type="password" placeholder="请输入您的密码" v-model="password">
         </div>
         <div class="login_btn">
-          <input type="submit" value="登录">
+          <input type="submit" value="登录" @click="HandleLogin">
         </div>
         <div class="login_link">
           <a href="#">立即注册</a>
@@ -20,8 +20,44 @@
   </div>
 </template>
 <script>
+import { messageBox } from "../js";
 export default {
-  name: "login"
+  name: "login",
+  data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
+  methods: {
+    async HandleLogin() {
+      let that = this;
+      if (!this.username || !this.password) {
+        messageBox({
+          title: "登录",
+          content: "请输入用户名/密码",
+          cancel: "取消"
+        });
+        return false;
+      } else {
+        let result = await this.$axios.post("/api2/users/login", {
+          username: this.username,
+          password: this.password
+        });
+        let data = result.data;
+        if (data.status == 0) {
+          messageBox({
+            title: "登录",
+            content: "登录成功",
+            ok: "确定",
+            handleOk() {
+              that.$router.push("/mine/center");
+            }
+          });
+        }
+      }
+    }
+  }
 };
 </script>
 <style scoped>
